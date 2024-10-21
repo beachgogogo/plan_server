@@ -1,15 +1,16 @@
-from typing import Optional, List, Dict
+from typing import Optional, Dict
 from src.definitions import Status
 from fastapi.responses import ORJSONResponse
+import re
 
 
-def response_data(data: Optional[Dict[str, any]],
+def response_data(data: Optional[Dict[str, any], str],
                   message: Optional[str] = None,
                   status: Status = Status.FULL_SUCCEED) -> ORJSONResponse:
     """
     Args:
         data: 字段用于存放实际业务数据，如查询到的用户信息、商品列表等。
-        status: 字段表示请求的状态，成功时为 “success”，失败时为 “error” 等类似标识，方便前端快速判断请求是否成功。
+        status: 除HTTP状态码外的内部状态信息
         message: 字段用于提供额外的信息，如失败时的错误原因、成功时的提示信息等。
     Returns:
         dict类型响应数据
@@ -22,3 +23,11 @@ def response_data(data: Optional[Dict[str, any]],
     return ORJSONResponse([resp])
 
 
+def email_checking(email: str) -> bool:
+    """
+    邮箱账号字符串验证，如果符合邮箱账号规则返回true，否则返回false
+    :param email:
+    :return: bool
+    """
+    pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+    return bool(re.match(pattern, email))

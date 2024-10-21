@@ -7,25 +7,24 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from model import TokenData, UserInfo
-from database_method import find_user_by_email
-from model_dock import get_DBUser_info, get_DBUser_info_to_UserInfo
+from database_method import find_user_by_id, find_user_by_email
 
 
 SECRET_KEY = hash_from_time()
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30    # 令牌维持30s
+ACCESS_TOKEN_EXPIRE_MINUTES = 30    # 令牌维持30min
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 async def authenticate_user(email: str, password: str):
-    user = get_DBUser_info(await find_user_by_email(email))
-    if not user:
+    user = await find_user_by_email(email)
+    if user is None:
         return False
     if not verify_info(password, user["password"]):
         return False
-    return user
+    return str(user.id)
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
@@ -47,14 +46,13 @@ async def get_current_user_token(token: Annotated[str, Depends(oauth2_scheme)]):
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
-        if email is None:
+        user_id: str = payload.get("sub")
+        if user_id is None:
             raise credentials_exception
-        token_data = TokenData(email=email)
+        token_data = TokenData(user_id=user_id)
     except InvalidTokenError:
         raise credentials_exception
-    user = await find_user_by_email(token_data.email)
-    if user is None:
+    if await find_user_by_id(token_data.user_id) is None:
         raise credentials_exception
     return token_data
 

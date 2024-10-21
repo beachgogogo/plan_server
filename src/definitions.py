@@ -4,6 +4,8 @@ from enum import Enum
 """
 异常
 """
+
+
 class DataDuplicationException(Exception):
     """数据重复异常 409"""
 
@@ -26,7 +28,6 @@ class NotAcceptableException(Exception):
     def __init__(self, message):
         super().__init__(message)
         self.message = message
-
 
 
 """
@@ -52,6 +53,17 @@ class TaskProperty(Enum):
     """
     OPTIONAL = 0
     REQUIRED = 1
+
+
+class Gender(str, Enum):
+    MALE = "male"
+    FEMALE = "female"
+
+
+class Action(str, Enum):
+    CREATE = "create"
+    UPDATE = "update"
+    VIEW = "view"
 
 
 class Status(Enum):

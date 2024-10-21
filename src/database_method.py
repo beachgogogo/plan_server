@@ -1,69 +1,164 @@
+from odmantic.exceptions import DocumentParsingError
+from odmantic import Model
 from src.config import engine
 from odmantic import ObjectId
 from src import database_model as model
-from typing import Optional, List
+from typing import Optional, List, Union
 from datetime import datetime
 from src.tool.config_tool import increment_value, Key
-from src.tool.hash_context import get_info_hash
 from fastapi import HTTPException
-from src.definitions import TaskProperty, TaskType
+from src.definitions import TaskProperty, TaskType, Action
+from src import model as pyt_model
 
 """
 ======= 用户相关 =======
 """
 
 
-async def user_email_exist(email_str):
+async def user_email_exist(email_str: str):
     result = await engine.find_one(model.DBUser, model.DBUser.email == email_str)
     if result is not None:
         raise HTTPException(409, detail="email exists")
 
 
-async def user_name_exist(username):
+async def user_name_exist(username: str):
     result = await engine.find_one(model.DBUser, model.DBUser.username == username)
     if result is not None:
         raise HTTPException(409, detail="username exists")
 
 
-async def phone_num_exist(phone_num):
-    result = await engine.find_one(model.DBUser, model.DBUser.phone_number == phone_num)
+async def phone_num_exist(phone_num: str):
+    result = await engine.find_one(model.DBUserContact, model.DBUserContact.phone_number == phone_num)
     if result is not None:
         raise HTTPException(409, detail="phone_num exists")
 
 
-async def create_user_info(email: str, username: str, password: str, phone_num: Optional[str] = None):
-    try:
-        await user_email_exist(email)
-        await user_name_exist(username)
-        user_num = increment_value(Key.user_num, 1)
-        user = model.DBUser(num=user_num,
-                            email=email,
-                            username=username,
-                            password=get_info_hash(password),
-                            phone_number=phone_num,
-                            create_time=datetime.now())
-    except HTTPException as err:
-        raise err
-    else:
-        await engine.save(user)
+async def count_coll_num(ins: Model):
+    return await engine.count(ins)
+
+
+async def create_user_info(user: pyt_model.User):
+    async with engine.transaction() as transaction:
+        try:
+            if await transaction.find_one(model.DBUser,
+                                          model.DBUser.email == user.email) is None:
+                raise HTTPException(409, detail="email exists")
+            if await transaction.find_one(model.DBUser,
+                                          model.DBUser.username == user.username) is None:
+                raise HTTPException(409, detail="email exists")
+            current_time = datetime.now()
+            user_profile = model.DBUserProfile(create_time=current_time)
+            user_contact = model.DBUserContact(phone_number=user.phone_number)
+            user_activities = model.DBUserActivities(actions=[model.DBAction(time=current_time,
+                                                                             type=Action,
+                                                                             info=str(locals()))])
+            user = model.DBUser(email=user.email,
+                                username=user.username,
+                                password=user.password,
+                                profile=user_profile,
+                                contact=user_contact,
+                                activities=user_activities,
+                                folder_list=model.DBUserFolderList())
+        except HTTPException as err:
+            transaction.abort()
+            raise err
+        except BaseException as err:
+            transaction.abort()
+            raise HTTPException(503, detail="server error")
+        else:
+            await transaction.save(user)
+            await transaction.commit()
+
+
+async def update_user_sign(user_id: str, sign: str):
+    async with engine.transaction() as transaction:
+        try:
+            user = await transaction.find_one(model.DBUser,
+                                              model.DBUser.id == user_id)
+            if user is None:
+                raise HTTPException(404, detail="data not found")
+            profile = user.profile
+            profile.personalized_signature = sign
+        except HTTPException as err:
+            transaction.abort()
+            raise err
+        else:
+            transaction.save(profile)
+            transaction.commit()
+
+
+async def update_user_profile(user_id: str, profile_info: pyt_model.UserProfileInfo):
+    async with engine.transaction() as transaction:
+        try:
+            user = await transaction.find_one(model.DBUser,
+                                              model.DBUser.id == user_id)
+            if user is None:
+                raise HTTPException(404, detail="data not found")
+            user.username = profile_info.username
+            user_profile = user.profile
+            user_profile.model_update(profile_info, exclude={"username"})
+        except ValueError as err:
+            transaction.abort()
+            raise HTTPException(409, detail="value error")
+        except HTTPException as err:
+            transaction.abort()
+            raise err
+        else:
+            transaction.save_all([user, user_profile])
+            transaction.commit()
+
+
+async def update_user_phone_num(user_id: str, phone_num: str):
+    async with engine.transaction() as transaction:
+        try:
+            if await transaction.find_one(model.DBUserContact,
+                                          model.DBUserContact.phone_number == phone_num) is not None:
+                raise HTTPException(409, "phone number exist")
+            user = await transaction.find_one(model.DBUser,
+                                              model.DBUser.id == user_id)
+            if user is None:
+                raise HTTPException(404, detail="data not found")
+            contact = user.contact
+            contact.phone_number = phone_num
+        except HTTPException as err:
+            transaction.abort()
+            raise err
+        else:
+            transaction.save(contact)
+            transaction.commit()
 
 
 async def find_user_by_email(email: str):
-    if email == "":
-        return None
-    user = await engine.find_one(model.DBUser, model.DBUser.email == email)
-    return user
+    try:
+        user = await engine.find_one(model.DBUser, model.DBUser.email == email)
+    except BaseException:
+        raise HTTPException(503, detail="server error")
+    else:
+        return user
 
 
 async def find_user_by_username(username: str):
-    if username == "":
-        return None
-    user = await engine.find_one(model.DBUser, model.DBUser.username == username)
-    return user
+    try:
+        user = await engine.find_one(model.DBUser, model.DBUser.username == username)
+    except BaseException:
+        raise HTTPException(503, detail="server error")
+    else:
+        return user
 
 
 async def find_user_by_phonenum(phone_num: str):
-    user = await engine.find_one(model.DBUser, model.DBUser.phone_number == phone_num)
+    async with engine.transaction() as transaction:
+        try:
+            contact = await engine.find_one(model.DBUserContact, model.DBUserContact.phone_number == phone_num)
+            user = await engine.find_one(model.DBUser, model.DBUser.contact == contact.id)
+        except BaseException:
+            raise HTTPException(503, detail="server error")
+        else:
+            return user
+
+
+async def find_user_by_id(user_id: str):
+    user = await engine.find_one(model.DBUser, model.DBUser.id == ObjectId(user_id))
     return user
 
 
@@ -78,9 +173,12 @@ async def find_user_by_phonenum(phone_num: str):
 """
 
 
-async def create_folder(doc_name: str):
-    doc = model.DBFolder(name=doc_name, create_time=datetime.now())
-    await engine.save(doc)
+async def create_folder(user_email: str, doc_name: str):
+    folder = model.DBFolder(name=doc_name, create_time=datetime.now())
+    user = await find_user_by_email(user_email)
+    user.file_set.append(folder)
+    await engine.save_all([folder, user])
+    return folder.id
 
 
 async def folder_remove_plan(doc_id: ObjectId, plan_id: ObjectId):
@@ -94,11 +192,21 @@ async def folder_remove_plan(doc_id: ObjectId, plan_id: ObjectId):
     await engine.save(doc)
 
 
-async def del_folder(doc_id: ObjectId):
-    doc = await engine.find_one(model.DBFolder, model.DBFolder.id == doc_id)
-    if doc is None:
+async def del_folder(folder_id: ObjectId):
+    folder = await engine.find_one(model.DBFolder, model.DBFolder.id == folder_id)
+    if folder is None:
         raise HTTPException(404, detail="folder not exists")
-    await engine.delete(doc)
+    await engine.delete(folder)
+    return folder.id
+
+
+async def del_folder_by_user(user_email: str, folder_id: ObjectId):
+    user = await find_user_by_email(user_email)
+    if folder_id not in user.file_set:
+        raise HTTPException(404, detail="folder not in user set")
+    folder_id = await del_folder(folder_id)
+    await engine.save(user)
+    return folder_id
 
 
 async def folder_rename(doc_id: ObjectId, new_name: str):
@@ -117,32 +225,40 @@ async def folder_add_plan(doc_id: ObjectId, plan_id: ObjectId):
     await engine.save(doc)
 
 
-async def get_folder_name(doc_id: ObjectId):
-    doc = await engine.find_one(model.DBFolder, model.DBFolder.id == doc_id)
-    if doc is None:
+async def find_folder_by_name(folder_name: str):
+    folder = await engine.find_one(model.DBFolder, model.DBFolder.name == folder_name)
+    if folder is None:
         raise HTTPException(404, detail="folder not exists")
-    return doc.name
+    return folder
 
 
-async def get_folder_plan(doc_id: ObjectId):
-    doc = await engine.find_one(model.DBFolder, model.DBFolder.id == doc_id)
-    if doc is None:
+async def find_folder_name(folder_id: ObjectId):
+    folder = await engine.find_one(model.DBFolder, model.DBFolder.id == folder_id)
+    if folder is None:
         raise HTTPException(404, detail="folder not exists")
-    return doc.tasks
+    return folder.name
 
 
-async def get_folder_info(folder_id: ObjectId):
+async def find_folder_plan(folder_id: ObjectId):
+    folder = await engine.find_one(model.DBFolder, model.DBFolder.id == folder_id)
+    if folder is None:
+        raise HTTPException(404, detail="folder not exists")
+    return folder.tasks
+
+
+async def find_folder_info(folder_id: ObjectId):
     folder = await engine.find_one(model.DBFolder, model.DBFolder.id == folder_id)
     if folder is None:
         raise HTTPException(404, detail="folder not exists")
     return folder
+
 
 """
 ===== plan =====
 """
 
 
-async def create_plan(plan_name: str):
+async def create_plan_by_name(plan_name: str):
     plan = model.DBPlan(name=plan_name,
                         status=False,
                         create_time=datetime.now(),
@@ -152,8 +268,23 @@ async def create_plan(plan_name: str):
     return plan.id
 
 
-async def del_plan(plan_id: ObjectId):
-    plan = await engine.find_one(model.DBPlan, model.DBPlan.id == plan_id)
+async def create_plan_by_doc(doc_data: dict):
+    if doc_data["parent_folder"] is not None:
+        doc_data["parent_folder"] = ObjectId(doc_data["parent_folder"])
+    try:
+        doc_data["create_time"] = str(datetime.now())
+        plan = model.DBPlan.model_validate_doc(doc_data)
+    except DocumentParsingError:
+        raise HTTPException(406, "could not save to database")
+    await engine.save(plan)
+    return plan.model_dump_json()
+
+
+async def del_plan(plan_id: Union[ObjectId, str]):
+    id_copy = plan_id
+    if type(plan_id) is str:
+        id_copy = ObjectId(plan_id)
+    plan = await engine.find_one(model.DBPlan, model.DBPlan.id == id_copy)
     if plan is None:
         raise HTTPException(404, detail="plan not exists")
     await engine.delete(plan)
@@ -317,3 +448,12 @@ async def task_multi_operation(task_id: ObjectId,
                 task.sub_exec_block.remove(item)
             else:
                 raise HTTPException(404, detail="delete action item not found")
+
+
+"""
+base
+"""
+
+
+def str_to_objectid(data: str):
+    return ObjectId(data)

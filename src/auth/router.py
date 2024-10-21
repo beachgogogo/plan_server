@@ -10,3 +10,4 @@ auth_router.include_router(login_router, prefix="/token", tags=["token"])
 auth_router.include_router(register_router, prefix="/register", tags=["register"])
 auth_router.include_router(task_router, prefix="/project", tags=["project"])
 
+

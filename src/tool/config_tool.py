@@ -23,7 +23,7 @@ def flush_config_data(data):
 
 def data_generator():
     while True:
-        for i in range(10):
+        for i in range(1):
             key, incre_num = yield
             init_data[key] += incre_num
             yield init_data[key]
@@ -35,15 +35,14 @@ next(generator)
 
 
 def init_config_file():
+    global init_data
     if not os.path.exists(path):
         with open(path, 'w') as f:
             json.dump(init_data, f)
     else:
-        data = None
         with open(path, 'r') as f:
             data = json.load(f)
-        for key in init_data.keys():
-            init_data[key] = data[key]
+        init_data = data
 
 
 def increment_value(key: Key, increment_num: int):
