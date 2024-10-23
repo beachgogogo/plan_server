@@ -19,9 +19,9 @@ async def user_register(user: User):
     """
     try:
         user.password = get_info_hash(user.password)
-        await create_user_info(user)
+        await create_user_info(user.model_dump())
     except HTTPException as err:
-        await logging_by_thread(LogLevel.INFO, err.detail, user_register.__qualname__)
+        await logging_by_thread(LogLevel.WARNING, err.detail, user_register.__qualname__)
         raise err
     else:
         await logging_by_thread(LogLevel.INFO, f"add user succeed. {user.email}", user_register.__qualname__)

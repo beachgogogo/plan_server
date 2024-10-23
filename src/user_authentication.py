@@ -6,7 +6,7 @@ from src.tool.hash_context import verify_info
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
-from model import TokenData, UserInfo
+from model import TokenData
 from database_method import find_user_by_id, find_user_by_email
 
 

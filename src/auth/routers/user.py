@@ -1,20 +1,19 @@
 from fastapi import APIRouter, Depends
 from typing import Annotated
 from src.user_authentication import get_current_user_token
-from src.model import TokenData, UserInfo
-from src.database_method import find_user_by_email, user_name_exist, phone_num_exist, find_user_by_id
+from src.model import TokenData, UserInfo, UserProfileInfo, UserContactInfo
+from src.database_method import phone_num_exist, find_user_by_id, update_user_profile, update_user_contact
 from src.tool.packaging_tool import response_data
 from src.config import engine
 
 user_router = APIRouter()
 
 
-@user_router.get("/info")
-async def get_user_info(
+@user_router.get("/info/base")
+async def api_get_user_info(
         token: Annotated[TokenData, Depends(get_current_user_token)],
 ):
     """
-    得到用户除密码外所有信息\n
     user_num：用户码
     :param token:
     :return:
@@ -33,35 +32,30 @@ async def get_user_info(
     return response_data(data=ret_user.model_dump_json())
 
 
-@user_router.patch("/info/username")
-async def reset_user_name(
+@user_router.post("/info/profile")
+async def api_update_user_profile(
         token: Annotated[TokenData, Depends(get_current_user_token)],
-        name: str):
+        data: UserProfileInfo):
     """
     更新用户名称
+    :param data:
     :param token:
     :param name: username
     :return: username
     """
-    await user_name_exist(name)
-    user = await find_user_by_id(user_id=token.user_id)
-    user.username = name
-    await engine.save(user)
-    return response_data(data={"username": name})
+    await update_user_profile(token.user_id, data.model_dump())
+    return response_data(data={data.model_dump_json()})
 
 
-@user_router.patch("/info/phone")
-async def reset_user_name(
+@user_router.patch("/info/contact")
+async def api_update_user_contact(
         token: Annotated[TokenData, Depends(get_current_user_token)],
-        phone_num: str):
+        data: UserContactInfo):
     """
-    更新用户手机号
     :param token:
     :param phone_num: phone number
     :return: phone number in database
     """
-    await phone_num_exist(phone_num)
-    user_contact = (await find_user_by_id(user_id=token.user_id)).contact
-    user_contact.phone_number = phone_num
-    await engine.save(user_contact)
-    return response_data(data={"phone number": user_contact.phone_number})
+    await update_user_contact(token.user_id, act_type=data.action_type,
+                              pf_data=data.model_dump())
+    return response_data(data={data.model_dump_json()})

@@ -39,7 +39,7 @@ class TaskType(Enum):
     """
     任务类型
     1 周期型任务
-    2 可选型任务
+    2 单次型任务
     """
     CYCLICTASK = 0
     ONETIMETASK = 1
