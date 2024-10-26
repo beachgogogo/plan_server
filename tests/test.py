@@ -7,7 +7,7 @@ from odmantic import AIOEngine, Model, Reference, ObjectId, EmbeddedModel
 from typing import List, Literal, Dict
 
 
-class Publisher(Model):
+class Publisher(BaseModel):
     name: str
     founded: int
     location: str
@@ -17,17 +17,28 @@ class Book(BaseModel):
     title: str
     pages: int
     publish_time: datetime
-    # publisher: Publisher = Reference()
+    publisher: Publisher = Reference()
 
 
-class Tester(BaseModel):
+class Tester(Model):
+    num: int
     publish_list: List[ObjectId] = []
-    book: Book
+
+
+class Tester2(BaseModel):
+    publish_list: List[str] = []
 
 
 class Music(Model):
     name: str
 
+tester = Tester(num=3, publish_list=[ObjectId("6715fc608f18f2755899ce89"), ObjectId("6715fe3e3a3f578f596599fd"),
+                               ObjectId("6715fe3e3a3f578f596599fe")])
+hachette = Publisher(name="Hachette Livre", founded=1826, location="FR")
+harper = Publisher(name="HarperCollins", founded=1989, location="US")
+ha_dump = hachette.model_dump(exclude={"name"})
+print(ha_dump)
+ret = harper.model_validate(ha_dump)
 
 # print(Book.model_fields)
 # def func(data: Literal[Unpack[list(Book.model_fields.keys())]]):
@@ -37,20 +48,9 @@ class Music(Model):
 # except BaseException as err:
 #     print(err)
 
-Music.
 
 # tester = Tester(publish_list=[ObjectId("6715fc608f18f2755899ce89"), ObjectId("6715fe3e3a3f578f596599fd"),
 #                               ObjectId("6715fe3e3a3f578f596599fe")])
-# engine = AIOEngine(database="test")
-# loop = asyncio.get_event_loop()
-# start_time = datetime.now()
-# # ret = loop.run_until_complete(engine.find(Publisher, Publisher.id.in_(tester.publish_list),
-# #                                     Publisher.name == "Hachette Livre"))
-# ret = loop.run_until_complete(engine.find)
-# end_time = datetime.now()
-# print((end_time - start_time).microseconds)
-# print(ret)
-# loop.close()
 #
 #
 # hachette = Publisher(name="Hachette Livre", founded=1826, location="FR")

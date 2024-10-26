@@ -64,20 +64,6 @@ class TokenData(BaseModel):
     user_id: Optional[str] = None
 
 
-class Folder(BaseModel):
-    name: str
-    tasks: List[str] = []
-    docs: List[str] = []
-    create_time: datetime
-
-
-class FolderUpdateInfo(BaseModel):
-    """
-    待完善
-    """
-    folder_name: str
-
-
 class NewPlanRecv(BaseModel):
     name: str
     task_list: List[str] = []
@@ -104,3 +90,94 @@ class ExecutableAction(BaseModel):
     status: 操作状态 [已完成， 未完成]
     """
     name: str
+    status: bool = False
+
+
+class CyclicTask(BaseModel):
+    type = "cyclic_task"
+    current_round: int = 0
+    period: datetime
+    start_time: datetime
+    end_time: datetime
+
+
+class OneTimeTask(BaseModel):
+    type = "one_time_task"
+    start_time: datetime
+    end_time: datetime
+
+
+class Award(BaseModel):
+    detail: Optional[str] = None
+    is_fulfill: bool = False
+
+
+class TaskUnit(BaseModel):
+    name: str
+    type_info: Union[CyclicTask, OneTimeTask]
+    task_property: Literal["optional", "required"]
+    is_available: bool = True
+    status: bool = False
+    award: Optional[Award] = None
+    sub_exec_block: List[ExecutableAction] = []
+
+
+class PlanInfo(BaseModel):
+    plan_id: Optional[str] = None
+    name: str
+    task_list: List[str, TaskUnit] = []
+    status: bool = True
+    create_time: datetime
+    award: Award
+    start_time: Optional[datetime] = None
+    end_time: Optional[datetime] = None
+
+
+class PlanCreateRecv(BaseModel):
+    folder_name: str
+    plan_name: str
+    status: bool = True
+    award_detail: Optional[Award] = None
+    start_time: Optional[datetime] = None
+    end_time: Optional[datetime] = None
+
+
+class PlanDeleteRecv(BaseModel):
+    folder_name: str
+    plan_name: str
+
+
+class PlanUpdateProfileRecv(BaseModel):
+    plan_id: str
+    plan_name: str
+    status: bool = True
+    award: Award
+    start_time: Optional[datetime]
+    end_time: Optional[datetime]
+
+
+class Folder(BaseModel):
+    name: str
+    status: bool = True
+    plans: List[str, PlanInfo] = []
+    create_time: datetime
+
+
+class UserFolderList(BaseModel):
+    folder_list: List[Folder] = []
+
+
+class FolderCreateRecv(BaseModel):
+    folder_name: str
+    status: bool
+
+
+class FolderDeleteRecv(BaseModel):
+    folder_name: str
+
+
+class FolderUpdateRecv(BaseModel):
+    old_name: str
+    new_name: str
+    status: bool = True
+

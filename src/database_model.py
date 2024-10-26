@@ -17,7 +17,7 @@ class DBExecutableAction(EmbeddedModel):
     status: bool = False
 
 
-class DBAward(Model):
+class DBAward(EmbeddedModel):
     """
     :param detail: 奖励内容
     :param is_fulfill: 是否实现
@@ -62,6 +62,7 @@ class DBMinimumTaskUnit(Model):
     status: bool = False
     award: Optional[DBAward] = None
     plan: Reference()
+    user: Reference()
     sub_exec_block: List[DBExecutableAction] = []
 
 

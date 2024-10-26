@@ -192,6 +192,7 @@ async def del_user(user_id: str):
                                               model.DBUser.id == ObjectId(user_id))
             if user is None:
                 raise HTTPException(404, detail="data not found")
+            await del_all_folder(user_id)
             profile = user.profile
             contact = user.contact
             activities = user.activities
@@ -268,7 +269,7 @@ def inner_user_update_actions(activities: model.DBUserActivities,
 """
 
 
-async def create_folder(user_id: str, folder_name: str):
+async def create_folder(user_id: str, folder_name: str, status: bool):
     async with engine.transaction() as transaction:
         try:
             user = await transaction.find_one(model.DBUser,
@@ -277,8 +278,10 @@ async def create_folder(user_id: str, folder_name: str):
                 raise HTTPException(404, detail="data not found")
             current_time = datetime.now()
             fd_list = user.folder_list
-            fd_list.folder_list.append(model.DBFolder(name=folder_name,
-                                                      create_time=current_time))
+            folder = model.DBFolder(name=folder_name,
+                                                      status=status,
+                                                      create_time=current_time)
+            fd_list.folder_list.append(folder)
             activities = user.activities
             activities.actions.append(model.DBAction(time=current_time,
                                                      type=Action.UPDATE,
@@ -292,9 +295,7 @@ async def create_folder(user_id: str, folder_name: str):
         else:
             await transaction.save_all([fd_list, activities])
             await transaction.commit()
-
-
-# async def inner_find_folder()
+            return folder.model_dump_json()
 
 
 async def folder_remove_plan(user_id: str, folder_name: str, plan_name: str):
@@ -305,15 +306,15 @@ async def folder_remove_plan(user_id: str, folder_name: str, plan_name: str):
             if user is None:
                 raise HTTPException(404, detail="data not found")
             fd_list = user.folder_list
-            for fd in fd_list:
+            for fd in fd_list.folder_list:
                 if fd.name == folder_name:
                     plan = transaction.find_one(model.DBPlan, model.DBPlan.id.in_(fd.plans),
                                                 model.DBPlan.name == plan_name)
-                    # delete plan
+                    await inner_del_plan_by_id(str(plan.id))
         except HTTPException as err:
             await transaction.abort()
             raise err
-        except ValueError as err:
+        except ValueError:
             await transaction.abort()
             raise HTTPException(404, detail="plan not in folder")
         else:
@@ -321,7 +322,29 @@ async def folder_remove_plan(user_id: str, folder_name: str, plan_name: str):
             await transaction.commit()
 
 
-async def del_folder(user_id: str, folder_name: str, plan_name: str):
+async def del_all_folder(user_id: str):
+    async with engine.transaction() as transaction:
+        try:
+            user = await transaction.find_one(model.DBUser,
+                                              model.DBUser.id == ObjectId(user_id))
+            if user is None:
+                raise HTTPException(404, detail="data not found")
+            folder_list = user.folder_list
+            for fd in folder_list.folder_list:
+                for plan_id in fd.plans:
+                    await inner_del_plan_by_id(plan_id)
+                folder_list.folder_list.remove(fd)
+            act = inner_user_update_actions(user.activities, Action.DELETE,
+                                            info=str(locals()))
+        except HTTPException as err:
+            await transaction.abort()
+            raise err
+        else:
+            transaction.save_all([act, folder_list])
+            await transaction.commit()
+
+
+async def del_folder(user_id: str, folder_name: str):
     async with engine.transaction() as transaction:
         try:
             user = await transaction.find_one(model.DBUser,
@@ -332,21 +355,34 @@ async def del_folder(user_id: str, folder_name: str, plan_name: str):
             is_find = False
             for fd in folder_list.folder_list:
                 if fd.name == folder_name:
-                    # delete plan and task in folder
+                    for plan_id in fd.plans:
+                        await inner_del_plan_by_id(plan_id)
                     folder_list.folder_list.remove(fd)
                     is_find = True
                     break
             if is_find is False:
                 raise HTTPException(404, detail="folder not exists")
+            act = inner_user_update_actions(user.activities, Action.DELETE,
+                                            info=str(locals()))
         except HTTPException as err:
             await transaction.abort()
             raise err
         else:
-            # save
+            transaction.save_all([act, folder_list])
             await transaction.commit()
 
 
-async def folder_update_name(user_id: str, old_name: str, new_name: str):
+async def get_all_folder(user_id: str):
+    async with engine.transaction() as transaction:
+        user = await transaction.find_one(model.DBUser,
+                                          model.DBUser.id == ObjectId(user_id))
+        if user is None:
+            raise HTTPException(404, detail="data not found")
+        fd_list = user.folder_list
+        return fd_list.model_dump_json()
+
+
+async def folder_update_info(user_id: str, old_name: str, new_name: str, status: bool):
     async with engine.transaction() as transaction:
         try:
             user = await transaction.find_one(model.DBUser,
@@ -358,6 +394,7 @@ async def folder_update_name(user_id: str, old_name: str, new_name: str):
             for fd in fd_list.folder_list:
                 if fd.name == old_name:
                     fd.name = new_name
+                    fd.status = status
                     is_find = True
                     break
             if is_find is False:
@@ -370,7 +407,25 @@ async def folder_update_name(user_id: str, old_name: str, new_name: str):
             await transaction.abort()
             raise HTTPException(409, detail="value error")
         else:
+            await transaction.commit()
             await transaction.save_all([fd_list, act])
+
+
+async def find_folder_by_name(user_id: str, folder_name: str):
+    async with engine.transaction() as transaction:
+        try:
+            user = await transaction.find_one(model.DBUser,
+                                              model.DBUser.id == ObjectId(user_id))
+            if user is None:
+                raise HTTPException(404, detail="data not found")
+            fd_idx = inner_find_folder_by_name(user.folder_list, folder_name)
+            fd_data = user.folder_list.folder_list[fd_idx]
+        except HTTPException as err:
+            await transaction.abort()
+            raise err
+        else:
+            await transaction.commit()
+            return fd_data.model_dump_json(exclude={"version"})
 
 
 def inner_find_folder_by_name(folder_list: model.DBUserFolderList,
@@ -395,7 +450,7 @@ def inner_find_folder_by_name(folder_list: model.DBUserFolderList,
 
 
 async def create_plan(user_id: str, folder_name: str, plan_name: str,
-                      award_detail: str):
+                      award_detail: str, status: bool):
     async with engine.transaction() as transaction:
         try:
             user = await transaction.find_one(model.DBUser,
@@ -410,6 +465,7 @@ async def create_plan(user_id: str, folder_name: str, plan_name: str,
             plan = model.DBPlan(name=plan_name,
                                 create_time=current_time,
                                 user=user,
+                                status=status,
                                 award=model.DBAward(detail=award_detail))
             fd_list.folder_list[fd_idx].plans.append(plan)
             action = inner_user_update_actions(user.activities, Action.CREATE,
@@ -420,17 +476,43 @@ async def create_plan(user_id: str, folder_name: str, plan_name: str,
         else:
             await transaction.save_all([fd_list, action])
             await transaction.commit()
+            return plan.model_dump_json()
 
 
-async def del_plan(plan_id: Union[ObjectId, str]):
-    id_copy = plan_id
-    if type(plan_id) is str:
-        id_copy = ObjectId(plan_id)
-    plan = await engine.find_one(model.DBPlan, model.DBPlan.id == id_copy)
+async def inner_del_plan_by_id(plan_id: str):
+    plan = await engine.find_one(model.DBPlan, model.DBPlan.id == plan_id)
     if plan is None:
         raise HTTPException(404, detail="plan not exists")
+    task_list = engine.find(model.DBMinimumTaskUnit,
+                                 model.DBMinimumTaskUnit.id.in_(plan.task_list))
+    for task in task_list:
+        await engine.delete(task)
     await engine.delete(plan)
-    return plan_id
+
+
+async def plan_update_profile(user_id:str, plan_id: str, plan_name:str, status: bool,
+                              award_detail: str, fulfill: bool,
+                              start_time: datetime, end_time: datetime):
+    async with engine.transaction() as transaction:
+        user = transaction.find_one(model.DBUser,
+                                    model.DBUser.id == ObjectId(user_id))
+        plan = transaction.find_one(model.DBPlan,
+                                    model.DBPlan.id == ObjectId(plan_id),
+                                    model.DBPlan.user == ObjectId(user_id))
+        if user is None or plan is None:
+            transaction.abort()
+            raise HTTPException(404, detail="data not exists")
+        plan.name = plan_name
+        plan.status = status
+        plan.award.detail = award_detail
+        plan.award.is_fulfill = fulfill
+        plan.start_time = start_time
+        plan.end_time = end_time
+        activities = inner_user_update_actions(user.activities, Action.UPDATE,
+                                               info=str(locals()),
+                                               time=datetime.now())
+        transaction.save_all([plan, activities])
+        transaction.commit()
 
 
 async def plan_update_field(user_id: str, folder_name: str,
@@ -465,17 +547,34 @@ async def plan_update_field(user_id: str, folder_name: str,
             await transaction.commit()
 
 
-async def plan_del_task_unit(plan_id: ObjectId, task_id: ObjectId):
-    plan = await engine.find_one(model.DBPlan, model.DBPlan.id == plan_id)
-    if plan is None:
-        raise HTTPException(404, detail="plan not exists")
+async def get_plan_info_by_name(user_id: str, folder_name: str, plan_name: str):
+    async with engine.transaction() as transaction:
+        try:
+            user = await transaction.find_one(model.DBUser,
+                                              model.DBUser.id == ObjectId(user_id))
+            fd_idx = inner_find_folder_by_name(user.folder_list, folder_name)
+            plan = transaction.find_one(model.DBPlan,
+                                        model.DBPlan.id.in_(user.folder_list.folder_list[fd_idx].plans),
+                                        model.DBPlan.name == plan_name)
+            if plan is None:
+                raise HTTPException(404, detail="plan not found")
+        except HTTPException as err:
+            await transaction.abort()
+            raise err
+        else:
+            await transaction.commit()
+            return plan.model_dump_json(exclude={"version", "user"})
+
+
+async def get_plan_info_by_id(plan_id: str):
     try:
-        plan.task_list.remove(task_id)
-    except ValueError:
-        raise HTTPException(404, detail="task not in plan")
+        plan = await engine.find_one(model.DBPlan,
+                                     model.DBPlan.id == ObjectId(plan_id))
+    except ValueError as err:
+        raise HTTPException(404, detail="plan not found")
     else:
-        await engine.save(plan)
-        return plan_id
+        return plan.model_dump_json(exclude={"version", "user"})
+
 
 
 async def plan_get_info(plan_id: ObjectId, attribute_name: str):
@@ -536,11 +635,13 @@ async def create_task_unit(user_id: str, plan_name: str,
             await transaction.commit()
 
 
-async def del_task_unit(task_unit_id: str, plan_name: str):
+async def del_task_by_id(user_id: str, plan_id: str, task_unit_id: str):
     async with engine.transaction() as transaction:
         try:
             task = await transaction.find_one(model.DBMinimumTaskUnit,
-                                              model.DBMinimumTaskUnit.id == task_unit_id)
+                                              model.DBMinimumTaskUnit.id == ObjectId(task_unit_id),
+                                              model.DBMinimumTaskUnit.plan == ObjectId(plan_id),
+                                              model.DBMinimumTaskUnit.user == ObjectId(user_id))
             if task is None:
                 raise HTTPException(404, detail="plan not exists")
             plan = task.plan
@@ -593,6 +694,13 @@ async def task_del_action(task_id: ObjectId, action_name: str):
     if action is None:
         raise HTTPException(404, detail="action not exists")
     task.sub_exec_block.remove(action.id)
+
+
+async def get_task_by_id(task_id: str):
+    task = await engine.find_one(model.DBMinimumTaskUnit, model.DBMinimumTaskUnit.id == task_id)
+    if task is None:
+        raise HTTPException(404, detail="plan not exists")
+    return task.model_dump_json(exclude={"version", "plan", "user"})
 
 
 """

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from typing import Annotated
 from src.user_authentication import get_current_user_token
 from src.model import TokenData, UserInfo, UserProfileInfo, UserContactInfo
-from src.database_method import phone_num_exist, find_user_by_id, update_user_profile, update_user_contact
+from src.database_method import phone_num_exist, find_user_by_id, update_user_profile, update_user_contact, del_user
 from src.tool.packaging_tool import response_data
 from src.config import engine
 
@@ -51,11 +51,14 @@ async def api_update_user_profile(
 async def api_update_user_contact(
         token: Annotated[TokenData, Depends(get_current_user_token)],
         data: UserContactInfo):
-    """
-    :param token:
-    :param phone_num: phone number
-    :return: phone number in database
-    """
     await update_user_contact(token.user_id, act_type=data.action_type,
                               pf_data=data.model_dump())
     return response_data(data={data.model_dump_json()})
+
+
+@user_router.delete("/info")
+async def api_delete_user(
+        token: Annotated[TokenData, Depends(get_current_user_token)]):
+    await del_user(token.user_id)
+    return response_data(data="done")
+

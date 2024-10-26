@@ -64,6 +64,7 @@ class Action(str, Enum):
     CREATE = "create"
     UPDATE = "update"
     VIEW = "view"
+    DELETE = "delete"
 
 
 class Status(Enum):
