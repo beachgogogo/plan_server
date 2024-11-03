@@ -4,6 +4,7 @@ from enum import Enum
 import json
 import os
 from .config import executor
+from pathlib import Path
 
 """
 NOTE
@@ -110,6 +111,6 @@ async def logging_by_thread(level: LogLevel,
 
 
 # logger init
-init_logger_setting(in_path="../log_file/1.json",
+init_logger_setting(in_path=Path(__file__).parent.parent / "log_file/1.json",
                     in_max_size=32 * 1024,
                     in_backup_count=50)

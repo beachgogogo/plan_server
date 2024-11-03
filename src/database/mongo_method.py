@@ -1,14 +1,22 @@
-from odmantic.exceptions import DocumentParsingError
 from odmantic import Model
+from odmantic.session import AIOSession
+
 from src.config import engine
 from odmantic import ObjectId
-from src import database_model as model
-from typing import Optional, List, Union, Literal, Dict, Any
+from src.database import mongo_model as model
+from typing import Optional, List, Literal, Dict, Any, Generator, Annotated
 from datetime import datetime
-from src.tool.config_tool import increment_value, Key
-from fastapi import HTTPException
+from fastapi import HTTPException, Depends
 from src.definitions import TaskProperty, Action
-from typing_extensions import Unpack
+
+
+async def get_db() -> Generator[AIOSession, None, None]:
+    async with engine.session() as session:
+        yield session
+
+
+SessionDep = Annotated[AIOSession, Depends(get_db)]
+
 
 """
 ======= 用户相关 =======
@@ -38,36 +46,37 @@ async def count_coll_num(ins: Model):
 
 
 async def create_user_info(user: dict):
-    async with engine.transaction() as transaction:
-        try:
-            if await transaction.find_one(model.DBUser,
-                                          model.DBUser.email == user["email"]) is not None:
-                raise HTTPException(409, detail="email exists")
-            if await transaction.find_one(model.DBUser,
-                                          model.DBUser.username == user["username"]) is not None:
-                raise HTTPException(409, detail="email exists")
-            current_time = datetime.now()
-            user_profile = model.DBUserProfile(create_time=current_time)
-            user_contact = model.DBUserContact(phone_number=user["phone_number"])
-            user_activities = model.DBUserActivities(actions=[model.DBAction(time=current_time,
-                                                                             type=Action.CREATE,
-                                                                             info=str(locals()))])
-            user = model.DBUser(email=user["email"],
-                                username=user["username"],
-                                password=user["password"],
-                                profile=user_profile,
-                                contact=user_contact,
-                                activities=user_activities,
-                                folder_list=model.DBUserFolderList())
-        except HTTPException as err:
-            await transaction.abort()
-            raise err
-        except BaseException as err:
-            await transaction.abort()
-            raise HTTPException(503, detail="server error")
-        else:
-            await transaction.save(user)
-            await transaction.commit()
+    async with engine.session() as session:
+        async with session.transaction() as transaction:
+            try:
+                if await transaction.find_one(model.DBUser,
+                                              model.DBUser.email == user["email"]) is not None:
+                    raise HTTPException(409, detail="email exists")
+                if await transaction.find_one(model.DBUser,
+                                              model.DBUser.username == user["username"]) is not None:
+                    raise HTTPException(409, detail="email exists")
+                current_time = datetime.now()
+                user_profile = model.DBUserProfile(create_time=current_time)
+                user_contact = model.DBUserContact(phone_number=user["phone_number"])
+                user_activities = model.DBUserActivities(actions=[model.DBAction(time=current_time,
+                                                                                 type=Action.CREATE,
+                                                                                 info=str(locals()))])
+                user = model.DBUser(email=user["email"],
+                                    username=user["username"],
+                                    password=user["password"],
+                                    profile=user_profile,
+                                    contact=user_contact,
+                                    activities=user_activities,
+                                    folder_list=model.DBUserFolderList())
+            except HTTPException as err:
+                await transaction.abort()
+                raise err
+            except BaseException as err:
+                await transaction.abort()
+                raise HTTPException(503, detail="server error")
+            else:
+                await transaction.save(user)
+                await transaction.commit()
 
 
 async def update_user_sign(user_id: str, sign: str):
@@ -92,7 +101,7 @@ async def update_user_sign(user_id: str, sign: str):
 
 
 async def update_user_contact(user_id: str, act_type: Literal["add", "delete", "update"],
-                              pf_data: Dict[str: Any]):
+                              pf_data: Dict[str, Any]):
     """
     修改Profile中的单个字段
     规则：
@@ -484,7 +493,7 @@ async def inner_del_plan_by_id(plan_id: str):
     if plan is None:
         raise HTTPException(404, detail="plan not exists")
     task_list = engine.find(model.DBMinimumTaskUnit,
-                                 model.DBMinimumTaskUnit.id.in_(plan.task_list))
+                            model.DBMinimumTaskUnit.id.in_(plan.task_list))
     for task in task_list:
         await engine.delete(task)
     await engine.delete(plan)
@@ -515,38 +524,6 @@ async def plan_update_profile(user_id:str, plan_id: str, plan_name:str, status: 
         transaction.commit()
 
 
-async def plan_update_field(user_id: str, folder_name: str,
-                            alter_item: Literal[Unpack[model.DBPlan.model_fields.keys()]],
-                            new_info: Union[str, bool, datetime]):
-    """
-    更改Plan单个字段数据
-    :param user_id:
-    :param folder_name:
-    :param alter_item:
-    :param new_info:
-    :return:
-    """
-    async with engine.transaction() as transaction:
-        try:
-            user = await transaction.find_one(model.DBUser,
-                                              model.DBUser.id == ObjectId(user_id))
-            if user is None:
-                raise HTTPException(404, detail="user not found")
-            fd_list = user.folder_list
-            fd_idx = inner_find_folder_by_name(fd_list, folder_name)
-            plan = await transaction.find_one(model.DBPlan, model.DBPlan.id.in_(fd_list[fd_idx].plans))
-            if plan is None:
-                raise HTTPException(404, detail="plan not found")
-            plan.model_update({alter_item: new_info})
-            action = inner_user_update_actions(user.activities, Action.UPDATE, str(locals()))
-        except HTTPException as err:
-            await transaction.abort()
-            raise err
-        else:
-            await transaction.save_all([plan, action])
-            await transaction.commit()
-
-
 async def get_plan_info_by_name(user_id: str, folder_name: str, plan_name: str):
     async with engine.transaction() as transaction:
         try:
@@ -574,7 +551,6 @@ async def get_plan_info_by_id(plan_id: str):
         raise HTTPException(404, detail="plan not found")
     else:
         return plan.model_dump_json(exclude={"version", "user"})
-
 
 
 async def plan_get_info(plan_id: ObjectId, attribute_name: str):
@@ -652,26 +628,6 @@ async def del_task_by_id(user_id: str, plan_id: str, task_unit_id: str):
         else:
             transaction.save_all([task, plan])
             transaction.commit()
-
-
-async def task_update_field(task_unit_id: str,
-                            alter_item: Literal[Unpack[model.DBMinimumTaskUnit.model_fields.keys()]],
-                            new_info: Optional[str, bool, model.DBCyclicTask,
-                            model.DBOneTimeTask, Literal["optional", "required"]]
-                            ):
-    async with engine.transaction() as transaction:
-        try:
-            task = await transaction.find_one(model.DBMinimumTaskUnit,
-                                              model.DBMinimumTaskUnit.id == task_unit_id)
-            if task is None:
-                raise HTTPException(404, detail="plan not exists")
-            task.model_update({alter_item: new_info})
-        except HTTPException as err:
-            await transaction.abort()
-            raise err
-        else:
-            await transaction.save(task)
-            await transaction.commit()
 
 
 async def task_insert_action(task_id: ObjectId, action_name: str):

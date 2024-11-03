@@ -67,7 +67,7 @@ class Action(str, Enum):
     DELETE = "delete"
 
 
-class Status(Enum):
+class Status(str, Enum):
     """
     除RESTFUL状态码之外的状态记录。
     "FULL_SUCCEED": 完全成功

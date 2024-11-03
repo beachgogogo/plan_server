@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from typing import Annotated
-from src.model import TokenData, NewPlanRecv, PlanUID
-from src.user_authentication import get_current_user_token
-from src.database_method import create_plan_by_doc, str_to_objectid, del_plan
+from src.model import TokenData, NewPlanRecv
+from src.user_authentication import get_current_user_token, GetToken
+from src.database.mongo_method import , str_to_objectid, del_plan
 from src.tool.packaging_tool import response_data
 
 
@@ -11,7 +11,7 @@ plan_router = APIRouter()
 
 @plan_router.post("/plan")
 async def api_create_plan(
-    token: Annotated[TokenData, Depends(get_current_user_token)],
+    token: GetToken,
     plan_info: NewPlanRecv
 ):
     """

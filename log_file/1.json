@@ -1,143 +1,73 @@
-{"timestamp": "2024-10-07 17:43:59,732", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-07 17:44:00,458", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-07 17:45:37,112", "level": "INFO", "message": "An error occurred: localhost:27017: [WinError 10061] \u7531\u4e8e\u76ee\u6807\u8ba1\u7b97\u673a\u79ef\u6781\u62d2\u7edd\uff0c\u65e0\u6cd5\u8fde\u63a5\u3002 (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 6703ad60b9814526b8876c3b, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] \u7531\u4e8e\u76ee\u6807\u8ba1\u7b97\u673a\u79ef\u6781\u62d2\u7edd\uff0c\u65e0\u6cd5\u8fde\u63a5\u3002 (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-07 17:47:37,427", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-07 17:47:39,131", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-07 17:48:38,506", "level": "INFO", "message": "An error occurred: localhost:27017: [WinError 10061] \u7531\u4e8e\u76ee\u6807\u8ba1\u7b97\u673a\u79ef\u6781\u62d2\u7edd\uff0c\u65e0\u6cd5\u8fde\u63a5\u3002 (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 6703ae3baaa25442f9288042, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] \u7531\u4e8e\u76ee\u6807\u8ba1\u7b97\u673a\u79ef\u6781\u62d2\u7edd\uff0c\u65e0\u6cd5\u8fde\u63a5\u3002 (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-07 18:06:30,239", "level": "INFO", "message": "An error occurred: localhost:27017: [WinError 10061] \u7531\u4e8e\u76ee\u6807\u8ba1\u7b97\u673a\u79ef\u6781\u62d2\u7edd\uff0c\u65e0\u6cd5\u8fde\u63a5\u3002 (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 6703ae3baaa25442f9288042, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] \u7531\u4e8e\u76ee\u6807\u8ba1\u7b97\u673a\u79ef\u6781\u62d2\u7edd\uff0c\u65e0\u6cd5\u8fde\u63a5\u3002 (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-07 18:07:22,072", "level": "INFO", "message": "An error occurred: localhost:27017: [WinError 10061] \u7531\u4e8e\u76ee\u6807\u8ba1\u7b97\u673a\u79ef\u6781\u62d2\u7edd\uff0c\u65e0\u6cd5\u8fde\u63a5\u3002 (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 6703ae3baaa25442f9288042, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] \u7531\u4e8e\u76ee\u6807\u8ba1\u7b97\u673a\u79ef\u6781\u62d2\u7edd\uff0c\u65e0\u6cd5\u8fde\u63a5\u3002 (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-07 18:10:05,272", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-07 18:10:05,858", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-07 21:05:41,826", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-07 21:05:42,462", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-07 21:05:53,563", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-07 22:22:27,329", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-07 22:22:27,934", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-07 22:22:39,904", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-07 22:22:47,360", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-07 22:22:49,323", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-07 22:27:28,240", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-07 23:51:02,552", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-07 23:51:03,144", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-07 23:51:07,419", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-07 23:57:33,013", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-07 23:57:33,697", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-07 23:57:36,271", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 00:02:33,900", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:37:48,660", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:37:49,348", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:37:52,501", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 00:40:01,590", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 00:40:06,362", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:40:15,969", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:40:17,524", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:40:21,395", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 00:41:10,498", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:41:11,224", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:41:15,609", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 00:41:25,879", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:41:27,325", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:41:48,600", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 00:43:07,164", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:43:07,936", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:43:10,481", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 00:43:19,721", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 00:43:24,153", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 00:45:42,051", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:45:42,738", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:45:45,623", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 00:47:03,351", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:47:04,013", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:47:06,849", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 00:47:32,215", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:47:40,505", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:47:41,180", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:47:44,189", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 00:48:51,121", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:48:51,804", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:48:54,518", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 00:48:58,037", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 00:52:23,055", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:52:23,746", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 00:52:25,428", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 01:48:25,901", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 01:48:26,623", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 01:48:29,337", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 01:58:26,572", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 19:18:56,155", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 19:18:56,792", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 19:18:59,618", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 19:19:03,651", "level": "INFO", "message": "email is repeated: 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 19:23:10,362", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 19:23:15,933", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 19:23:16,542", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 19:23:18,935", "level": "INFO", "message": "email is repeated", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 19:24:16,154", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 19:24:16,752", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-08 19:24:23,042", "level": "INFO", "message": "email is repeated", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 19:24:24,693", "level": "INFO", "message": "email is repeated", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-08 19:24:37,782", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-09 01:14:53,165", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-09 01:14:53,928", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-11 01:24:48,352", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-11 01:24:49,025", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-11 01:25:57,390", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-11 01:25:58,987", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-11 01:30:03,363", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-11 01:30:04,033", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-11 01:30:07,290", "level": "INFO", "message": "add user succeed. 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-11 21:14:59,261", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-11 21:14:59,940", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-11 21:15:51,205", "level": "INFO", "message": "add user succeed. 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-11 21:23:39,743", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-11 21:23:41,290", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-11 21:25:03,687", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-11 21:25:04,394", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-11 21:27:12,960", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-11 21:27:13,640", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-11 21:30:23,462", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-11 21:30:24,117", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
-{"timestamp": "2024-10-11 21:30:25,855", "level": "INFO", "message": "email exists", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-11 21:30:31,475", "level": "INFO", "message": "email exists", "name": "Logger", "funcName": "user_register", "lineno": 96}
-{"timestamp": "2024-10-11 21:31:09,370", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 21:31:16,601", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 21:31:17,218", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 21:31:20,409", "level": "INFO", "message": "email exists", "name": "Logger", "funcName": "user_register", "lineno": 95}
-{"timestamp": "2024-10-11 21:31:53,968", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 21:31:54,631", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 21:31:57,082", "level": "INFO", "message": "email exists", "name": "Logger", "funcName": "user_register", "lineno": 95}
-{"timestamp": "2024-10-11 22:00:08,180", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 22:00:08,825", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 22:02:18,164", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 22:02:18,779", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 22:02:21,789", "level": "INFO", "message": "email exists", "name": "Logger", "funcName": "user_register", "lineno": 95}
-{"timestamp": "2024-10-11 22:02:28,677", "level": "INFO", "message": "email exists", "name": "Logger", "funcName": "user_register", "lineno": 95}
-{"timestamp": "2024-10-11 22:02:30,071", "level": "INFO", "message": "email exists", "name": "Logger", "funcName": "user_register", "lineno": 95}
-{"timestamp": "2024-10-11 22:03:40,149", "level": "INFO", "message": "email exists", "name": "Logger", "funcName": "user_register", "lineno": 95}
-{"timestamp": "2024-10-11 22:03:41,936", "level": "INFO", "message": "email exists", "name": "Logger", "funcName": "user_register", "lineno": 95}
-{"timestamp": "2024-10-11 22:09:28,188", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 22:14:25,944", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 22:14:26,576", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 22:14:30,253", "level": "INFO", "message": "email exists", "name": "Logger", "funcName": "user_register", "lineno": 95}
-{"timestamp": "2024-10-11 22:15:45,543", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 22:15:46,929", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 22:18:21,392", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 22:18:22,768", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 22:24:58,131", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 22:25:13,454", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 22:25:14,099", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 22:25:16,817", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 22:25:17,443", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 22:25:24,931", "level": "INFO", "message": "add user succeed. 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 95}
-{"timestamp": "2024-10-11 23:13:08,086", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 23:13:08,768", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 23:13:19,875", "level": "INFO", "message": "add user succeed. 125555@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 95}
-{"timestamp": "2024-10-11 23:14:53,457", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 23:14:54,117", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 23:15:29,960", "level": "INFO", "message": "add user succeed. 126666@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 95}
-{"timestamp": "2024-10-11 23:21:46,535", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 23:21:47,153", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 23:22:03,598", "level": "INFO", "message": "add user succeed. 127777@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 95}
-{"timestamp": "2024-10-11 23:22:19,790", "level": "INFO", "message": "email exists", "name": "Logger", "funcName": "user_register", "lineno": 95}
-{"timestamp": "2024-10-11 23:26:47,174", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
-{"timestamp": "2024-10-11 23:31:46,795", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 95}
+{"timestamp": "2024-11-02 14:05:06,473", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-02 14:07:06,913", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-02 14:07:08,191", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 08:35:08,570", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 08:35:09,894", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 08:40:08,781", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:16:51,758", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:16:57,327", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:16:58,778", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:21:02,308", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:21:03,558", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:22:43,692", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:24:40,863", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:24:42,214", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:24:48,343", "level": "WARNING", "message": "email already exists in the system.", "name": "Logger", "funcName": "user_register", "lineno": 98}
+{"timestamp": "2024-11-03 13:28:49,622", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:28:51,880", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:29:24,255", "level": "WARNING", "message": "email already exists in the system.", "name": "Logger", "funcName": "user_register", "lineno": 98}
+{"timestamp": "2024-11-03 13:33:52,138", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:33:53,426", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:33:57,239", "level": "INFO", "message": "add user succeed. 127777@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
+{"timestamp": "2024-11-03 13:42:56,601", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:43:03,946", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:43:05,224", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:43:14,246", "level": "INFO", "message": "add user succeed. 127777@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
+{"timestamp": "2024-11-03 13:43:34,979", "level": "WARNING", "message": "email already exists in the system.", "name": "Logger", "funcName": "user_register", "lineno": 98}
+{"timestamp": "2024-11-03 13:43:37,994", "level": "WARNING", "message": "email already exists in the system.", "name": "Logger", "funcName": "user_register", "lineno": 98}
+{"timestamp": "2024-11-03 13:46:52,545", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:46:54,931", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:47:04,273", "level": "INFO", "message": "add user succeed. 127777@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
+{"timestamp": "2024-11-03 13:55:41,105", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:55:42,429", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:55:50,465", "level": "WARNING", "message": "email already exists in the system.", "name": "Logger", "funcName": "user_register", "lineno": 98}
+{"timestamp": "2024-11-03 13:56:32,316", "level": "INFO", "message": "add user succeed. 128888@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
+{"timestamp": "2024-11-03 13:58:40,714", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:58:43,124", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 13:59:01,078", "level": "INFO", "message": "add user succeed. 128888@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
+{"timestamp": "2024-11-03 14:00:43,294", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:02:28,869", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:02:31,199", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:02:56,543", "level": "INFO", "message": "add user succeed. 128888@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
+{"timestamp": "2024-11-03 14:09:10,471", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:09:11,739", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:09:16,366", "level": "INFO", "message": "add user succeed. 128888@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
+{"timestamp": "2024-11-03 14:11:03,256", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:11:15,082", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:11:16,347", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:11:19,247", "level": "INFO", "message": "add user succeed. 127777@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
+{"timestamp": "2024-11-03 14:13:30,772", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:13:36,212", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:13:37,499", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:13:41,165", "level": "WARNING", "message": "email already exists in the system.", "name": "Logger", "funcName": "user_register", "lineno": 98}
+{"timestamp": "2024-11-03 14:13:46,995", "level": "WARNING", "message": "email already exists in the system.", "name": "Logger", "funcName": "user_register", "lineno": 98}
+{"timestamp": "2024-11-03 14:13:52,983", "level": "INFO", "message": "add user succeed. 129999@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
+{"timestamp": "2024-11-03 14:16:06,499", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:16:10,353", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:16:11,617", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:16:27,778", "level": "INFO", "message": "add user succeed. 1230000@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
+{"timestamp": "2024-11-03 14:17:56,668", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:17:58,024", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:18:05,352", "level": "WARNING", "message": "email already exists in the system.", "name": "Logger", "funcName": "user_register", "lineno": 98}
+{"timestamp": "2024-11-03 14:18:14,882", "level": "INFO", "message": "add user succeed. 1231111@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
+{"timestamp": "2024-11-03 14:30:22,755", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:30:29,262", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:30:31,616", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:31:05,882", "level": "WARNING", "message": "email already exists in the system.", "name": "Logger", "funcName": "user_register", "lineno": 98}
+{"timestamp": "2024-11-03 14:31:18,674", "level": "INFO", "message": "add user succeed. 1232222@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
+{"timestamp": "2024-11-03 14:42:09,347", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:42:11,676", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:42:35,260", "level": "WARNING", "message": "email already exists in the system.", "name": "Logger", "funcName": "user_register", "lineno": 98}
+{"timestamp": "2024-11-03 14:42:42,976", "level": "INFO", "message": "add user succeed. 1233333@qq.com", "name": "Logger", "funcName": "user_register", "lineno": 96}
+{"timestamp": "2024-11-03 14:47:10,006", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}
+{"timestamp": "2024-11-03 14:52:09,668", "level": "INFO", "message": "logger handle changed", "name": "Logger", "funcName": "init_logger_setting", "lineno": 96}

@@ -13,8 +13,8 @@ login_router = APIRouter()
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> Token:
-    user_id = await authenticate_user(form_data.username, form_data.password)
-    if not user_id:
+    user_email = await authenticate_user(form_data.username, form_data.password)
+    if not user_email:
         raise HTTPException(
             status_code=401,
             detail="Incorrect email or password",
@@ -22,7 +22,7 @@ async def login_for_access_token(
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user_id}, expires_delta=access_token_expires
+        data={"sub": user_email}, expires_delta=access_token_expires
     )
     return Token(access_token=access_token, token_type="bearer")
 

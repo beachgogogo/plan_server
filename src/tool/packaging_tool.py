@@ -1,10 +1,11 @@
-from typing import Optional, Dict
+from typing import Optional, Dict, Union
+from pydantic import BaseModel
 from src.definitions import Status
 from fastapi.responses import ORJSONResponse
 import re
 
 
-def response_data(data: Optional[Dict[str, any], str],
+def response_data(data: Optional[Union[BaseModel, str]] = None,
                   message: Optional[str] = None,
                   status: Status = Status.FULL_SUCCEED) -> ORJSONResponse:
     """
@@ -15,12 +16,21 @@ def response_data(data: Optional[Dict[str, any], str],
     Returns:
         dict类型响应数据
     """
-    resp = {
-        "data": data,
-        "status": status.value,
-        "message": message
-    }
-    return ORJSONResponse([resp])
+    # resp = RespData(data=data, message=message, status=status)
+    if isinstance(data, BaseModel):
+        resp = {
+            "data": data.model_dump(),
+            "status": status.value,
+            "message": message
+        }
+    else:
+        resp = {
+            "data": data,
+            "status": status.value,
+            "message": message
+        }
+    # resp_json = jsonable_encoder(resp)
+    return ORJSONResponse(resp)
 
 
 def email_checking(email: str) -> bool:

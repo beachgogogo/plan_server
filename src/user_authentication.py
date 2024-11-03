@@ -7,7 +7,8 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from model import TokenData
-from database_method import find_user_by_id, find_user_by_email
+# from src.database.mongo_method import find_user_by_id, find_user_by_email
+from src.database.pg_method import find_user_by_email, start_db_session, stop_db_session
 
 
 SECRET_KEY = hash_from_time()
@@ -19,12 +20,14 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 async def authenticate_user(email: str, password: str):
-    user = await find_user_by_email(email)
+    session = start_db_session()
+    user = await find_user_by_email(session, email)
+    stop_db_session(session)
     if user is None:
         return False
-    if not verify_info(password, user["password"]):
+    if not verify_info(password, user.password):
         return False
-    return str(user.id)
+    return str(user.email)
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
@@ -38,7 +41,12 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-async def get_current_user_token(token: Annotated[str, Depends(oauth2_scheme)]):
+async def get_current_user_token(token: Annotated[str, Depends(oauth2_scheme)]) -> TokenData:
+    """
+    仅做验证，返回仅带用户email的Token
+    :param token:
+    :return:
+    """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -46,16 +54,20 @@ async def get_current_user_token(token: Annotated[str, Depends(oauth2_scheme)]):
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: str = payload.get("sub")
-        if user_id is None:
+        user_email: str = payload.get("sub")
+        if user_email is None:
             raise credentials_exception
-        token_data = TokenData(user_id=user_id)
+        token_data = TokenData(user_email=user_email)
     except InvalidTokenError:
         raise credentials_exception
-    if await find_user_by_id(token_data.user_id) is None:
+    session = start_db_session()
+    if await find_user_by_email(session, token_data.user_email) is None:
         raise credentials_exception
+    stop_db_session(session)
     return token_data
 
+
+GetToken = Annotated[TokenData, Depends(get_current_user_token)]
 
 # async def get_current_active_user(
 #     current_user: Annotated[UserInfo, Depends(get_current_user)],

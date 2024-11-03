@@ -1,9 +1,13 @@
 from odmantic import Model, ObjectId, Reference, EmbeddedModel
-from typing import Optional, List, Union, Literal
+from typing import Optional, List, Union, Literal, TYPE_CHECKING
 from datetime import datetime
 from src.definitions import Gender, Action
 from pydantic import model_validator
 from src.tool.packaging_tool import email_checking
+
+
+class DBBase(Model):
+    version: int = 1
 
 
 class DBExecutableAction(EmbeddedModel):
@@ -28,7 +32,7 @@ class DBAward(EmbeddedModel):
 
 
 class DBCyclicTask(EmbeddedModel):
-    type = "cyclic_task"
+    task_type: str = "cyclic_task"
     current_round: int = 0
     period: datetime
     start_time: datetime
@@ -36,9 +40,31 @@ class DBCyclicTask(EmbeddedModel):
 
 
 class DBOneTimeTask(EmbeddedModel):
-    type = "one_time_task"
+    task_type: str = "one_time_task"
     start_time: datetime
     end_time: datetime
+
+
+class DBPlan(Model):
+    """
+    计划模型
+    name: 计划名
+    task_list: 计划/最小任务单元序列号子节点列表
+    status: 公开状态
+    phase: 当前阶段（未/已经超时）
+    position： 完成情况（未/已完成）
+    user: 归属用户
+    create_time: 创建时间
+    """
+    version: int = 1
+    name: str
+    task_list: List[ObjectId] = []
+    status: bool = True
+    create_time: datetime
+    user: ObjectId  # DBUser
+    award: DBAward
+    start_time: Optional[datetime] = None
+    end_time: Optional[datetime] = None
 
 
 class DBMinimumTaskUnit(Model):
@@ -61,50 +87,9 @@ class DBMinimumTaskUnit(Model):
     is_available: bool = True
     status: bool = False
     award: Optional[DBAward] = None
-    plan: Reference()
-    user: Reference()
+    plan: DBPlan = Reference()
+    user: ObjectId  # DBUser
     sub_exec_block: List[DBExecutableAction] = []
-
-
-class DBPlan(Model):
-    """
-    计划模型
-    name: 计划名
-    task_list: 计划/最小任务单元序列号子节点列表
-    status: 公开状态
-    phase: 当前阶段（未/已经超时）
-    position： 完成情况（未/已完成）
-    user: 归属用户
-    create_time: 创建时间
-    """
-    version: int = 1
-    name: str
-    task_list: List[ObjectId] = []
-    status: bool = True
-    create_time: datetime
-    user: Reference()
-    award: DBAward
-    start_time: Optional[datetime] = None
-    end_time: Optional[datetime] = None
-
-
-class DBUser(Model):
-    schemaVersion: int = 1
-    num: Optional[int] = None
-    email: str
-    username: str
-    password: str
-    profile: Reference()  # DBUserProfile
-    contact: Reference()  # DBUserContact
-    activities: Reference()  # DBUserActivities
-    folder_list: Reference()  # DBUserFolderList
-
-    @model_validator(mode="before")
-    def check_email_form(cls, values):
-        email = values.get("email", 0)
-        if email_checking(email) is False:
-            raise ValueError("email format is incorrect")
-        return values
 
 
 class DBUserProfile(Model):
@@ -159,3 +144,23 @@ class DBFolder(EmbeddedModel):
 
 class DBUserFolderList(Model):
     folder_list: List[DBFolder] = []
+
+
+class DBUser(Model):
+    schemaVersion: int = 1
+    num: Optional[int] = None
+    email: str
+    username: str
+    password: str
+    profile: DBUserProfile = Reference()  # DBUserProfile
+    contact: DBUserContact = Reference()  # DBUserContact
+    activities: DBUserAddress = Reference()  # DBUserActivities
+    folder_list: DBUserFolderList = Reference()  # DBUserFolderList
+
+    @model_validator(mode="before")
+    def check_email_form(cls, values):
+        email = values.get("email", 0)
+        if email_checking(email) is False:
+            raise ValueError("email format is incorrect")
+        return values
+

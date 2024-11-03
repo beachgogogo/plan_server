@@ -1,64 +1,68 @@
 from fastapi import APIRouter, Depends
 from typing import Annotated
-from src.user_authentication import get_current_user_token
-from src.model import TokenData, UserInfo, UserProfileInfo, UserContactInfo
-from src.database_method import phone_num_exist, find_user_by_id, update_user_profile, update_user_contact, del_user
+from src.user_authentication import get_current_user_token, GetToken
+from src.model import TokenData, UserInfo, UserProfileInfo, UserAddressInfo
+# from src.database.mongo_method import find_user_by_id, update_user_profile, update_user_contact, del_user
+from src.database.pg_method import find_user_by_email, SessionDep, update_user_profile, update_user_addr, \
+    delete_user_addr
 from src.tool.packaging_tool import response_data
-from src.config import engine
 
 user_router = APIRouter()
 
 
-@user_router.get("/info/base")
-async def api_get_user_info(
-        token: Annotated[TokenData, Depends(get_current_user_token)],
-):
+@user_router.get("/base")
+async def api_get_user_info(session: SessionDep, token: GetToken):
     """
-    user_num：用户码
+    :param session:
     :param token:
     :return:
     """
-    user = await find_user_by_id(user_id=token.user_id)
+    user = await find_user_by_email(session, email=token.user_email)
     profile = user.profile
     contact = user.contact
-    ret_user = UserInfo(email=user.email,
-                        username=user.username,
-                        profile_photo=profile.profile_photo,
-                        personalized_signature=profile.personalized_signature,
-                        birthday=profile.birthday,
-                        gender=profile.gender,
-                        create_time=profile.create_time,
-                        phone_number=contact.phone_number)
-    return response_data(data=ret_user.model_dump_json())
+    ret_user = UserInfo.model_validate_json(user.model_dump_json())
+    ret_user = ret_user.model_validate_json(profile.model_dump_json())
+    ret_user = ret_user.model_validate_json(contact.model_dump_json())
+    return response_data(data=ret_user)
 
 
-@user_router.post("/info/profile")
+@user_router.patch("/profile")
 async def api_update_user_profile(
-        token: Annotated[TokenData, Depends(get_current_user_token)],
+        session: SessionDep,
+        token: GetToken,
         data: UserProfileInfo):
     """
     更新用户名称
+    :param session:
     :param data:
     :param token:
-    :param name: username
-    :return: username
+    :return:
     """
-    await update_user_profile(token.user_id, data.model_dump())
-    return response_data(data={data.model_dump_json()})
+    await update_user_profile(session, token.user_id, data.model_dump())
+    return response_data(data=data)
 
 
-@user_router.patch("/info/contact")
+@user_router.patch("/contact")
 async def api_update_user_contact(
         token: Annotated[TokenData, Depends(get_current_user_token)],
-        data: UserContactInfo):
-    await update_user_contact(token.user_id, act_type=data.action_type,
-                              pf_data=data.model_dump())
-    return response_data(data={data.model_dump_json()})
+        data: UserAddressInfo):
+    addr = await update_user_addr(token.user_id, user_email=token.user_email,
+                                  addr_ptr=data.addr_ptr, addr_data=data.addr_data)
+    return response_data(data=addr)
 
 
-@user_router.delete("/info")
-async def api_delete_user(
-        token: Annotated[TokenData, Depends(get_current_user_token)]):
-    await del_user(token.user_id)
-    return response_data(data="done")
+@user_router.patch("/contact")
+async def api_delete_user_contact(
+        token: Annotated[TokenData, Depends(get_current_user_token)],
+        data: UserAddressInfo):
+    addr = await delete_user_addr(token.user_id, user_email=token.user_email,
+                                  addr_ptr=data.addr_ptr)
 
+    return response_data(data=addr)
+
+
+# @user_router.delete("/")
+# async def api_delete_user(
+#         token: Annotated[TokenData, Depends(get_current_user_token)]):
+#     await del_user(token.user_id)
+#     return response_data(data="done")

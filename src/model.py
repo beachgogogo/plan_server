@@ -4,8 +4,7 @@ from datetime import datetime
 from src.definitions import Gender
 
 
-class User(BaseModel):
-    num: Optional[int] = None
+class UserRegister(BaseModel):
     email: str
     username: str
     password: str
@@ -36,20 +35,35 @@ class UserProfileInfo(BaseModel):
     gender: Optional[Gender] = None
 
 
-class UserAddress(BaseModel):
-    uid: Optional[str] = None
-    name: str
-    province: str
-    city: str
-    district: str
-    detailed_address: str
-    postal_code: Optional[str] = None
-    phone_number: str
+# class UserAddress(BaseModel):
+#     uid: Optional[str] = None
+#     name: str
+#     province: str
+#     city: str
+#     district: str
+#     detailed_address: str
+#     postal_code: Optional[str] = None
+#     phone_number: str
 
 
-class UserContactInfo(BaseModel):
+class UserAddressInfo(BaseModel):
     action_type: Literal["add", "delete", "update"] = Field(exclude=True)
-    data: Dict[Literal["phone number", "address"]: Union[List[str], List[UserAddress], UserAddress]]
+    addr_ptr: int
+    addr_data: str
+
+
+class UserAddrRespInfo(BaseModel):
+    addr_ptr: int = 0
+    addr1: str | None = Field(default=None, max_length=1024)
+    addr2: str | None = Field(default=None, max_length=1024)
+    addr3: str | None = Field(default=None, max_length=1024)
+    addr4: str | None = Field(default=None, max_length=1024)
+    addr5: str | None = Field(default=None, max_length=1024)
+    addr6: str | None = Field(default=None, max_length=1024)
+    addr7: str | None = Field(default=None, max_length=1024)
+    addr8: str | None = Field(default=None, max_length=1024)
+    addr9: str | None = Field(default=None, max_length=1024)
+    addr10: str | None = Field(default=None, max_length=1024)
 
 
 class Token(BaseModel):
@@ -61,7 +75,7 @@ class TokenData(BaseModel):
     """
     待完善
     """
-    user_id: Optional[str] = None
+    user_email: Optional[str] = None
 
 
 class NewPlanRecv(BaseModel):
@@ -93,20 +107,6 @@ class ExecutableAction(BaseModel):
     status: bool = False
 
 
-class CyclicTask(BaseModel):
-    type = "cyclic_task"
-    current_round: int = 0
-    period: datetime
-    start_time: datetime
-    end_time: datetime
-
-
-class OneTimeTask(BaseModel):
-    type = "one_time_task"
-    start_time: datetime
-    end_time: datetime
-
-
 class Award(BaseModel):
     detail: Optional[str] = None
     is_fulfill: bool = False
@@ -114,32 +114,41 @@ class Award(BaseModel):
 
 class TaskUnit(BaseModel):
     name: str
-    type_info: Union[CyclicTask, OneTimeTask]
-    task_property: Literal["optional", "required"]
+    type_info: Literal["CyclicTask", "DBOneTimeTask"] = "DBOneTimeTask"
+    current_round: int | None = None
+    period: datetime | None = None
+    task_property: Literal["optional", "required"] = "required"
+    start_time: datetime
+    end_time: datetime
     is_available: bool = True
     status: bool = False
-    award: Optional[Award] = None
-    sub_exec_block: List[ExecutableAction] = []
+    award_detail: str | None = None
+    award_fulfill: bool = False
+    sub_exec_block: str | None = None
 
 
 class PlanInfo(BaseModel):
     plan_id: Optional[str] = None
     name: str
-    task_list: List[str, TaskUnit] = []
+    task_list: List[Union[str, TaskUnit]] = []
     status: bool = True
     create_time: datetime
-    award: Award
+    award_detail: str | None = None
+    award_fulfill: bool = False
     start_time: Optional[datetime] = None
     end_time: Optional[datetime] = None
 
 
 class PlanCreateRecv(BaseModel):
-    folder_name: str
+    folder_id: str
     plan_name: str
-    status: bool = True
-    award_detail: Optional[Award] = None
+    visitable: bool = True
+    is_finish: bool = False
+    award_detail: str | None = None
+    award_fulfill: bool = False
     start_time: Optional[datetime] = None
     end_time: Optional[datetime] = None
+    task_list: List[TaskUnit] = []
 
 
 class PlanDeleteRecv(BaseModel):
@@ -159,7 +168,7 @@ class PlanUpdateProfileRecv(BaseModel):
 class Folder(BaseModel):
     name: str
     status: bool = True
-    plans: List[str, PlanInfo] = []
+    plans: List[Union[str, PlanInfo]] = []
     create_time: datetime
 
 

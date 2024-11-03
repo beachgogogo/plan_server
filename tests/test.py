@@ -1,44 +1,97 @@
+import uvicorn
+from fastapi import Depends, FastAPI
+from fastapi.encoders import jsonable_encoder
+from odmantic.session import AIOSession, AIOTransaction
 from typing_extensions import Unpack
 
 import asyncio
 from datetime import datetime, date
 from pydantic import BaseModel
 from odmantic import AIOEngine, Model, Reference, ObjectId, EmbeddedModel
-from typing import List, Literal, Dict
+from typing import List, Literal, Dict, Generator, Annotated, Optional, ClassVar
+from sqlmodel import SQLModel, Field, Relationship
+import uuid
 
 
-class Publisher(BaseModel):
-    name: str
-    founded: int
-    location: str
+class UserAddresses(Base, table=True):
+    addr_ptr: ClassVar[int] = 0
+    num: int = 0
+    addr1: str | None = Field(default=None, max_length=1024)
+    addr2: str | None = Field(default=None, max_length=1024)
+    addr3: str | None = Field(default=None, max_length=1024)
+    addr4: str | None = Field(default=None, max_length=1024)
+    addr5: str | None = Field(default=None, max_length=1024)
+    addr6: str | None = Field(default=None, max_length=1024)
+    addr7: str | None = Field(default=None, max_length=1024)
+    addr8: str | None = Field(default=None, max_length=1024)
+    addr9: str | None = Field(default=None, max_length=1024)
+    addr10: str | None = Field(default=None, max_length=1024)
 
 
-class Book(BaseModel):
-    title: str
-    pages: int
-    publish_time: datetime
-    publisher: Publisher = Reference()
+
+addr = UserAddresses(addr1="123123123")
+addr_ptr_value = 2  # 假设的指针值
+address = getattr(addr, f'addr{addr_ptr_value}') if hasattr(
+    addr, f'addr{addr_ptr_value}') else None
+print(address)
+
+# class User(Base, table=True):
+#     name: str = "root"
+#
+#
+# user = User(version=2, name="tom")
+# print(user)
 
 
-class Tester(Model):
-    num: int
-    publish_list: List[ObjectId] = []
+# class Base(BaseModel):
+#     version: int = 1
+#
+#
+# class BasePublisher(Base):
+#     name: str
+#     founded: int
+#     location: str
+#
+#
+# class Publisher(BasePublisher):
+#     out: Optional[str] = None
+#
+#
+# class Book(BaseModel):
+#     title: str
+#     pages: int
+#     publish_time: datetime
+#     publisher: Publisher = Reference()
+#
+#
+# class Tester(Model):
+#     num: int
+#     publish_list: List[ObjectId] = []
+#     fisher: ObjectId
+#
+#
+# class Tester2(BaseModel):
+#     publish_list: List[str] = []
+#
+#
+# class Music(Model):
+#     name: str
 
 
-class Tester2(BaseModel):
-    publish_list: List[str] = []
-
-
-class Music(Model):
-    name: str
-
-tester = Tester(num=3, publish_list=[ObjectId("6715fc608f18f2755899ce89"), ObjectId("6715fe3e3a3f578f596599fd"),
-                               ObjectId("6715fe3e3a3f578f596599fe")])
-hachette = Publisher(name="Hachette Livre", founded=1826, location="FR")
-harper = Publisher(name="HarperCollins", founded=1989, location="US")
-ha_dump = hachette.model_dump(exclude={"name"})
-print(ha_dump)
-ret = harper.model_validate(ha_dump)
+# if __name__ == '__main__':
+#     uvicorn.run("test:app", host="127.0.0.1", port=8080, reload=True)
+#######
+# loop = asyncio.get_event_loop()
+# start_time = datetime.now()
+# publisher = loop.run_until_complete(engine.save_all([peter, tester]))
+# end_time = datetime.now()
+# print((end_time - start_time).microseconds)
+# start_time = datetime.now()
+# ret_test = loop.run_until_complete(engine.find_one(Tester, Tester.num == 1))
+# end_time = datetime.now()
+# print((end_time - start_time).microseconds)
+# print(f"ret_test: {ret_test}")
+# loop.close()
 
 # print(Book.model_fields)
 # def func(data: Literal[Unpack[list(Book.model_fields.keys())]]):

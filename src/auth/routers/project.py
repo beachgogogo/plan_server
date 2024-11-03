@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from typing import Annotated
 from src.model import TokenData, Folder, PlanInfo, TaskUnit, UserFolderList, \
     FolderCreateRecv, FolderDeleteRecv, FolderUpdateRecv, PlanCreateRecv, PlanDeleteRecv, PlanUpdateProfileRecv
 from src.user_authentication import get_current_user_token
-from src.database_method import (create_folder, get_all_folder,
-                                 find_folder_by_name, get_plan_info_by_name, get_task_by_id, get_plan_info_by_id,
-                                 del_folder, folder_update_info, create_plan, folder_remove_plan, plan_update_profile)
+from src.database.mongo_method import (create_folder, get_all_folder,
+                                       find_folder_by_name, get_plan_info_by_name, get_task_by_id, get_plan_info_by_id,
+                                       del_folder, folder_update_info, create_plan, folder_remove_plan, plan_update_profile)
 from src.tool.packaging_tool import response_data
 
 task_router = APIRouter()
@@ -37,7 +37,7 @@ async def api_get_folder_info(
     :return:
     """
     fd_data_json = await find_folder_by_name(token.user_id, folder_name)
-    folder = Folder.model_dump_json(fd_data_json)
+    folder = Folder.model_validate_json(fd_data_json)
     return response_data(data=folder)
 
 
