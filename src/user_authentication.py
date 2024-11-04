@@ -8,7 +8,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from model import TokenData
 # from src.database.mongo_method import find_user_by_id, find_user_by_email
-from src.database.pg_method import find_user_by_email, start_db_session, stop_db_session
+from src.database.pg_method import inner_find_user_by_email, start_db_session, stop_db_session
 
 
 SECRET_KEY = hash_from_time()
@@ -21,7 +21,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 async def authenticate_user(email: str, password: str):
     session = start_db_session()
-    user = await find_user_by_email(session, email)
+    user = await inner_find_user_by_email(session, email)
     stop_db_session(session)
     if user is None:
         return False
@@ -61,7 +61,7 @@ async def get_current_user_token(token: Annotated[str, Depends(oauth2_scheme)]) 
     except InvalidTokenError:
         raise credentials_exception
     session = start_db_session()
-    if await find_user_by_email(session, token_data.user_email) is None:
+    if await inner_find_user_by_email(session, token_data.user_email) is None:
         raise credentials_exception
     stop_db_session(session)
     return token_data

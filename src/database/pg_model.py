@@ -61,6 +61,7 @@ class MinimumTaskUnit(ItemBase, table=True):
     task_property: Literal["optional", "required"] = "required"
     start_time: datetime
     end_time: datetime
+    status: bool = True
     is_finish: bool = False
     award_detail: str | None = None
     award_fulfill: bool = False
@@ -89,6 +90,7 @@ class Plan(Base, table=True):
 class UserFolder(Base, table=True):
     name: str = Field(max_length=255)
     visitable: bool = True
+    status: bool = True
     plans: List[Plan] | None = Relationship(back_populates="folder")
     create_time: datetime
 

@@ -13,27 +13,29 @@ from sqlmodel import SQLModel, Field, Relationship
 import uuid
 
 
-class UserAddresses(Base, table=True):
-    addr_ptr: ClassVar[int] = 0
-    num: int = 0
-    addr1: str | None = Field(default=None, max_length=1024)
-    addr2: str | None = Field(default=None, max_length=1024)
-    addr3: str | None = Field(default=None, max_length=1024)
-    addr4: str | None = Field(default=None, max_length=1024)
-    addr5: str | None = Field(default=None, max_length=1024)
-    addr6: str | None = Field(default=None, max_length=1024)
-    addr7: str | None = Field(default=None, max_length=1024)
-    addr8: str | None = Field(default=None, max_length=1024)
-    addr9: str | None = Field(default=None, max_length=1024)
-    addr10: str | None = Field(default=None, max_length=1024)
+class A(SQLModel, table=True):
+    id: uuid.UUID | None = Field(default_factory=uuid.uuid4, primary_key=True)
+    b_id: uuid.UUID | None = Field(default=None, foreign_key="b.id")
+    data: str = "AA"
+    b: Optional["B"] = Relationship(back_populates="a")
 
 
+class B(SQLModel, table=True):
+    id: uuid.UUID | None = Field(default_factory=uuid.uuid4, primary_key=True)
+    data: str = "BB"
+    a: A = Relationship(back_populates="b")
 
-addr = UserAddresses(addr1="123123123")
-addr_ptr_value = 2  # 假设的指针值
-address = getattr(addr, f'addr{addr_ptr_value}') if hasattr(
-    addr, f'addr{addr_ptr_value}') else None
-print(address)
+
+class C(SQLModel, table=True):
+    id: uuid.UUID | None = Field(default_factory=uuid.uuid4, primary_key=True)
+    data: str
+    data2: str = "sdsds"
+
+
+b1 = B(data="CC")
+c1 = C.model_validate(b1)
+print(type(c1))
+print(c1)
 
 # class User(Base, table=True):
 #     name: str = "root"

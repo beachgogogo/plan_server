@@ -5,7 +5,7 @@ from fastapi.responses import ORJSONResponse
 import re
 
 
-def response_data(data: Optional[Union[BaseModel, str]] = None,
+def response_data(data: Optional[Union[BaseModel, str, dict]] = None,
                   message: Optional[str] = None,
                   status: Status = Status.FULL_SUCCEED) -> ORJSONResponse:
     """

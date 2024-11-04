@@ -1,10 +1,9 @@
-from fastapi import APIRouter, Depends
-from typing import Annotated
-from src.user_authentication import get_current_user_token, GetToken
-from src.model import TokenData, UserInfo, UserProfileInfo, UserAddressInfo
+from fastapi import APIRouter
+from src.user_authentication import GetToken
+from src.model import UserInfo, UserProfileInfo, UserAddressInfo
 # from src.database.mongo_method import find_user_by_id, update_user_profile, update_user_contact, del_user
-from src.database.pg_method import find_user_by_email, SessionDep, update_user_profile, update_user_addr, \
-    delete_user_addr
+from src.database.pg_method import inner_find_user_by_email, SessionDep, update_user_profile, update_user_addr, \
+    delete_user_addr, delete_user
 from src.tool.packaging_tool import response_data
 
 user_router = APIRouter()
@@ -17,7 +16,7 @@ async def api_get_user_info(session: SessionDep, token: GetToken):
     :param token:
     :return:
     """
-    user = await find_user_by_email(session, email=token.user_email)
+    user = await inner_find_user_by_email(session, email=token.user_email)
     profile = user.profile
     contact = user.contact
     ret_user = UserInfo.model_validate_json(user.model_dump_json())
@@ -38,31 +37,34 @@ async def api_update_user_profile(
     :param token:
     :return:
     """
-    await update_user_profile(session, token.user_id, data.model_dump())
+    await update_user_profile(session, token.user_email, data.model_dump())
     return response_data(data=data)
 
 
 @user_router.patch("/contact")
 async def api_update_user_contact(
-        token: Annotated[TokenData, Depends(get_current_user_token)],
+        session: SessionDep,
+        token: GetToken,
         data: UserAddressInfo):
-    addr = await update_user_addr(token.user_id, user_email=token.user_email,
+    addr = await update_user_addr(session, user_email=token.user_email,
                                   addr_ptr=data.addr_ptr, addr_data=data.addr_data)
     return response_data(data=addr)
 
 
 @user_router.patch("/contact")
 async def api_delete_user_contact(
-        token: Annotated[TokenData, Depends(get_current_user_token)],
+        session: SessionDep,
+        token: GetToken,
         data: UserAddressInfo):
-    addr = await delete_user_addr(token.user_id, user_email=token.user_email,
+    addr = await delete_user_addr(session, user_email=token.user_email,
                                   addr_ptr=data.addr_ptr)
 
     return response_data(data=addr)
 
 
-# @user_router.delete("/")
-# async def api_delete_user(
-#         token: Annotated[TokenData, Depends(get_current_user_token)]):
-#     await del_user(token.user_id)
-#     return response_data(data="done")
+@user_router.delete("/")
+async def api_delete_user(
+        session: SessionDep,
+        token: GetToken):
+    data = await delete_user(session, token.user_email)
+    return response_data(data=data)

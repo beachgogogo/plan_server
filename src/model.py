@@ -1,3 +1,5 @@
+import uuid
+
 from pydantic import BaseModel, Field
 from typing import Optional, List, Literal, Union, Dict
 from datetime import datetime
@@ -87,44 +89,63 @@ class NewPlanRecv(BaseModel):
     end_time: Optional[datetime] = None
 
 
-class TaskType(BaseModel):
-    task_type: Literal["cyclic_task", "one_time_task"] = "one_time_task"
-    start_time: datetime
-    end_time: datetime
-    # 以下是周期型使用参数
-    current_round: Optional[int] = None
-    period: Optional[datetime] = None
-    is_available: bool = True
-
-
-class ExecutableAction(BaseModel):
-    """
-    可执行操作
-    name: 操作名称
-    status: 操作状态 [已完成， 未完成]
-    """
-    name: str
-    status: bool = False
-
-
-class Award(BaseModel):
-    detail: Optional[str] = None
-    is_fulfill: bool = False
-
-
 class TaskUnit(BaseModel):
+    id: uuid.UUID
     name: str
-    type_info: Literal["CyclicTask", "DBOneTimeTask"] = "DBOneTimeTask"
+    type_info: Literal["CyclicTask", "DBOneTimeTask"] = "OneTimeTask"
     current_round: int | None = None
     period: datetime | None = None
     task_property: Literal["optional", "required"] = "required"
     start_time: datetime
     end_time: datetime
-    is_available: bool = True
+    is_finish: bool = True
     status: bool = False
     award_detail: str | None = None
     award_fulfill: bool = False
     sub_exec_block: str | None = None
+
+
+class TaskUnitCreateRecv(BaseModel):
+    plan_id: str
+    name: str
+    type_info: Literal["CyclicTask", "DBOneTimeTask"] = "OneTimeTask"
+    current_round: int | None = None
+    period: datetime | None = None
+    task_property: Literal["optional", "required"] = "required"
+    start_time: datetime
+    end_time: datetime
+    is_finish: bool = True
+    status: bool = False
+    award_detail: str | None = None
+    award_fulfill: bool = False
+    sub_exec_block: str | None = None
+
+
+class TaskUnitUpdate(BaseModel):
+    name: str
+    type_info: Literal["CyclicTask", "DBOneTimeTask"] = "OneTimeTask"
+    current_round: int | None = None
+    period: datetime | None = None
+    task_property: Literal["optional", "required"] = "required"
+    start_time: datetime
+    end_time: datetime
+    is_finish: bool = True
+    status: bool = False
+    award_detail: str | None = None
+    award_fulfill: bool = False
+    sub_exec_block: str | None = None
+
+
+class TaskUnitUpdateRecv(BaseModel):
+    task_id: str
+    plan_id: str
+    data: TaskUnitUpdate
+
+
+class TaskUnitDelRecv(BaseModel):
+    plan_id: str
+    task_id: str
+    task_name: str
 
 
 class PlanInfo(BaseModel):
@@ -152,22 +173,25 @@ class PlanCreateRecv(BaseModel):
 
 
 class PlanDeleteRecv(BaseModel):
-    folder_name: str
     plan_name: str
+    plan_id: str
 
 
 class PlanUpdateProfileRecv(BaseModel):
     plan_id: str
     plan_name: str
-    status: bool = True
-    award: Award
+    visitable: bool = True
+    is_finish: bool = False
+    award_detail: str | None = None
+    award_fulfill: bool = False
     start_time: Optional[datetime]
     end_time: Optional[datetime]
 
 
 class Folder(BaseModel):
+    id: uuid.UUID
     name: str
-    status: bool = True
+    visitable: bool = True
     plans: List[Union[str, PlanInfo]] = []
     create_time: datetime
 
@@ -176,17 +200,31 @@ class UserFolderList(BaseModel):
     folder_list: List[Folder] = []
 
 
+class UserPlanList(BaseModel):
+    plan_list: List[PlanInfo] = []
+
+
+class UserTaskList(BaseModel):
+    task_list: List[TaskUnit] = []
+
+
+class UserTaskCreateList(BaseModel):
+    plan_id: str
+    task_list: List[TaskUnitCreateRecv] = []
+
+
 class FolderCreateRecv(BaseModel):
-    folder_name: str
-    status: bool
+    name: str
+    visitable: bool
 
 
 class FolderDeleteRecv(BaseModel):
-    folder_name: str
+    folder_id: str
 
 
 class FolderUpdateRecv(BaseModel):
-    old_name: str
-    new_name: str
+    folder_id: str
+    name: str
+    visitable: str
     status: bool = True
 
